@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - Soil Fertility Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="logo">🌱</div>
+            <h1>Create Account</h1>
+            <p class="subtitle">Join the Soil Fertility Predictor</p>
+
+            {% if error %}
+            <div class="alert alert-error">{{ error }}</div>
+            {% endif %}
+            {% if success %}
+            <div class="alert alert-success">{{ success }}</div>
+            {% endif %}
+
+            <form method="POST">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" placeholder="Choose a username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Choose a password" required>
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <select name="role">
+                        <option value="farmer">Farmer</option>
+                        <option value="geologist">Geologist</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+            <p class="link">Already have an account? <a href="/login">Login here</a></p>
+        </div>
+    </div>
+</body>
+</html>

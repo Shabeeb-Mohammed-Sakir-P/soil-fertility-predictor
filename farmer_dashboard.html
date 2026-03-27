@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farmer Dashboard - Soil Fertility Predictor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="dashboard">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo">🌱</div>
+      <h2>Soil Fertility<br>Predictor</h2>
+      <span>Farmer Portal</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Menu</div>
+      <a href="{{ url_for('farmer_dashboard') }}" class="nav-item active">
+        <span class="nav-icon">🏠</span> Dashboard
+      </a>
+      <a href="#predict" class="nav-item">
+        <span class="nav-icon">🔬</span> New Analysis
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="user-avatar">{{ user[0]|upper }}</div>
+        <div class="user-info">
+          <div class="uname">{{ user }}</div>
+          <div class="urole">Farmer</div>
+        </div>
+        <a href="{{ url_for('logout') }}" class="logout-btn" title="Logout">⏻</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="page-header">
+      <div>
+        <h1>Soil Analysis Dashboard</h1>
+        <p>Enter soil parameters and upload a leaf image to get your Soil Fertility Score</p>
+      </div>
+    </div>
+
+    <div class="content-area">
+      <form method="POST" action="{{ url_for('predict') }}" enctype="multipart/form-data" id="predictForm">
+
+        <!-- Macro Nutrients -->
+        <div class="form-card" id="predict">
+          <div class="form-card-header">
+            <div class="card-icon">🧪</div>
+            <div>
+              <h3>Macro & Primary Nutrients</h3>
+              <p>Enter NPK and key soil chemical properties</p>
+            </div>
+          </div>
+          <div class="npk-grid">
+            <div class="input-group">
+              <label>N — Nitrogen <span class="input-unit">(kg/ha)</span></label>
+              <input type="number" name="N" placeholder="e.g. 90" step="0.1" required>
+            </div>
+            <div class="input-group">
+              <label>P — Phosphorus <span class="input-unit">(kg/ha)</span></label>
+              <input type="number" name="P" placeholder="e.g. 42" step="0.1" required>
+            </div>
+            <div class="input-group">
+              <label>K — Potassium <span class="input-unit">(kg/ha)</span></label>
+              <input type="number" name="K" placeholder="e.g. 43" step="0.1" required>
+            </div>
+            <div class="input-group">
+              <label>pH Level</label>
+              <input type="number" name="pH" placeholder="e.g. 6.5" step="0.01" min="0" max="14" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Secondary Nutrients -->
+        <div class="form-card">
+          <div class="form-card-header">
+            <div class="card-icon">⚗️</div>
+            <div>
+              <h3>Secondary & Micro Nutrients</h3>
+              <p>Electrical conductivity, organic carbon, and trace elements</p>
+            </div>
+          </div>
+          <div class="npk-grid">
+            <div class="input-group">
+              <label>EC <span class="input-unit">(dS/m)</span></label>
+              <input type="number" name="EC" placeholder="e.g. 0.5" step="0.01" required>
+            </div>
+            <div class="input-group">
+              <label>OC — Organic Carbon <span class="input-unit">(%)</span></label>
+              <input type="number" name="OC" placeholder="e.g. 0.8" step="0.01" required>
+            </div>
+            <div class="input-group">
+              <label>S — Sulphur <span class="input-unit">(ppm)</span></label>
+              <input type="number" name="S" placeholder="e.g. 10" step="0.1" required>
+            </div>
+            <div class="input-group">
+              <label>Zn — Zinc <span class="input-unit">(ppm)</span></label>
+              <input type="number" name="Zn" placeholder="e.g. 0.5" step="0.01" required>
+            </div>
+            <div class="input-group">
+              <label>Fe — Iron <span class="input-unit">(ppm)</span></label>
+              <input type="number" name="Fe" placeholder="e.g. 0.8" step="0.01" required>
+            </div>
+            <div class="input-group">
+              <label>Cu — Copper <span class="input-unit">(ppm)</span></label>
+              <input type="number" name="Cu" placeholder="e.g. 0.3" step="0.01" required>
+            </div>
+            <div class="input-group">
+              <label>Mn — Manganese <span class="input-unit">(ppm)</span></label>
+              <input type="number" name="Mn" placeholder="e.g. 1.5" step="0.01" required>
+            </div>
+            <div class="input-group">
+              <label>B — Boron <span class="input-unit">(ppm)</span></label>
+              <input type="number" name="B" placeholder="e.g. 0.2" step="0.01" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leaf Image Upload -->
+        <div class="form-card">
+          <div class="form-card-header">
+            <div class="card-icon">🍃</div>
+            <div>
+              <h3>Leaf Image — Nitrogen Analysis</h3>
+              <p>Upload a clear photo of a crop leaf for nitrogen deficiency detection</p>
+            </div>
+          </div>
+          <div class="upload-zone" id="uploadZone">
+            <input type="file" name="leaf_image" id="leafInput" accept="image/*" required
+                   onchange="previewImage(this)">
+            <div id="uploadPlaceholder">
+              <div class="upload-icon">📷</div>
+              <h4>Click to upload leaf image</h4>
+              <p>Supports JPG, PNG, WEBP — clear, well-lit photo recommended</p>
+            </div>
+            <img id="previewImg" src="" alt="Preview"
+                 style="display:none; max-height:180px; border-radius:8px; margin: 0 auto;">
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <span>🔬</span> Analyze Soil Fertility
+        </button>
+
+      </form>
+    </div>
+  </main>
+
+</div>
+
+<script>
+function previewImage(input) {
+  const preview = document.getElementById('previewImg');
+  const placeholder = document.getElementById('uploadPlaceholder');
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+      placeholder.style.display = 'none';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+document.getElementById('predictForm').addEventListener('submit', function () {
+  const btn = document.getElementById('submitBtn');
+  btn.innerHTML = '<span>⏳</span> Analyzing... Please wait';
+  btn.disabled = true;
+  btn.style.opacity = '0.75';
+});
+</script>
+
+</body>
+</html>

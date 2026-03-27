@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Soil Fertility Predictor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="dashboard">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo">🌱</div>
+      <h2>Soil Fertility<br>Predictor</h2>
+      <span>Admin Portal</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Menu</div>
+      <a href="{{ url_for('admin_dashboard') }}" class="nav-item active">
+        <span class="nav-icon">📊</span> Overview
+      </a>
+      <a href="#predictions" class="nav-item">
+        <span class="nav-icon">🔬</span> Predictions
+      </a>
+      <a href="#users" class="nav-item">
+        <span class="nav-icon">👥</span> Users
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="user-avatar">{{ user[0]|upper }}</div>
+        <div class="user-info">
+          <div class="uname">{{ user }}</div>
+          <div class="urole">Admin</div>
+        </div>
+        <a href="{{ url_for('logout') }}" class="logout-btn" title="Logout">⏻</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="page-header">
+      <div>
+        <h1>Admin Dashboard</h1>
+        <p>Monitor all predictions, users and system activity</p>
+      </div>
+    </div>
+
+    <div class="content-area">
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon green">🔬</div>
+          <div class="stat-value">{{ total_predictions or 0 }}</div>
+          <div class="stat-label">Total Predictions</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon brown">👥</div>
+          <div class="stat-value">{{ total_users or 0 }}</div>
+          <div class="stat-label">Registered Users</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue">🟢</div>
+          <div class="stat-value">{{ high_count or 0 }}</div>
+          <div class="stat-label">High Fertility Cases</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon orange">🔴</div>
+          <div class="stat-value">{{ low_count or 0 }}</div>
+          <div class="stat-label">Low Fertility Cases</div>
+        </div>
+      </div>
+
+      <!-- Predictions Table -->
+      <div class="table-card" id="predictions">
+        <div class="table-card-header">
+          <h3>🔬 All Predictions</h3>
+          <span style="font-size:13px; color:var(--muted);">Latest submissions</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Farmer</th>
+              <th>N</th>
+              <th>P</th>
+              <th>K</th>
+              <th>pH</th>
+              <th>SFS Score</th>
+              <th>Fertility Level</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if predictions %}
+              {% for p in predictions %}
+              <tr>
+                <td>{{ loop.index }}</td>
+                <td><strong>{{ p.username }}</strong></td>
+                <td>{{ p.N }}</td>
+                <td>{{ p.P }}</td>
+                <td>{{ p.K }}</td>
+                <td>{{ p.pH }}</td>
+                <td><strong>{{ p.sfs_score }}%</strong></td>
+                <td>
+                  <span class="badge badge-{{ p.fertility_level|lower }}">{{ p.fertility_level }}</span>
+                </td>
+                <td style="color:var(--muted); font-size:13px;">{{ p.created_at or '—' }}</td>
+              </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="9" style="text-align:center; color:var(--muted); padding:40px;">
+                  No predictions yet.
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Users Table -->
+      <div class="table-card" id="users" style="margin-top:24px;">
+        <div class="table-card-header">
+          <h3>👥 Registered Users</h3>
+          <span style="font-size:13px; color:var(--muted);">All accounts</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Registered</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if users %}
+              {% for u in users %}
+              <tr>
+                <td>{{ loop.index }}</td>
+                <td><strong>{{ u.username }}</strong></td>
+                <td>
+                  <span class="badge" style="background:rgba(45,74,34,0.1); color:var(--earth);">
+                    {{ u.role }}
+                  </span>
+                </td>
+                <td style="color:var(--muted); font-size:13px;">{{ u.created_at or '—' }}</td>
+              </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="4" style="text-align:center; color:var(--muted); padding:40px;">
+                  No users registered yet.
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

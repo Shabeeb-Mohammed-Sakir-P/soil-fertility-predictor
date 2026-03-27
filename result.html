@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Result - Soil Fertility Predictor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="dashboard">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo">🌱</div>
+      <h2>Soil Fertility<br>Predictor</h2>
+      <span>Farmer Portal</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Menu</div>
+      <a href="{{ url_for('farmer_dashboard') }}" class="nav-item">
+        <span class="nav-icon">🏠</span> Dashboard
+      </a>
+      <a href="{{ url_for('farmer_dashboard') }}#predict" class="nav-item">
+        <span class="nav-icon">🔬</span> New Analysis
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="user-avatar">{{ user[0]|upper }}</div>
+        <div class="user-info">
+          <div class="uname">{{ user }}</div>
+          <div class="urole">Farmer</div>
+        </div>
+        <a href="{{ url_for('logout') }}" class="logout-btn" title="Logout">⏻</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="page-header">
+      <div>
+        <h1>Analysis Result</h1>
+        <p>AI-generated soil fertility assessment and crop recommendations</p>
+      </div>
+    </div>
+
+    <div class="content-area">
+
+      <!-- Hero Score Card -->
+      <div class="result-hero">
+        <div class="result-info">
+          <div class="level-badge {{ result.level|lower }}">{{ result.level }} Fertility</div>
+          <h2>Soil Fertility Score: {{ result.sfs }}%</h2>
+          <p>{{ result.recommendation }}</p>
+        </div>
+        <div class="sfs-circle">
+          <span class="sfs-num">{{ result.sfs }}</span>
+          <span class="sfs-label">SFS Score</span>
+        </div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="form-card" style="padding: 24px 32px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-size:13px; font-weight:600; color:var(--muted);">FERTILITY METER</span>
+          <span style="font-family:'Syne',sans-serif; font-weight:700; color:var(--dark);">{{ result.sfs }}%</span>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:12px; color:var(--muted);">
+          <span>0 — Low</span>
+          <span>40 — Medium</span>
+          <span>70 — High</span>
+          <span>100</span>
+        </div>
+      </div>
+
+      <!-- Result Grid -->
+      <div class="result-grid">
+
+        <!-- Crop Recommendations -->
+        <div class="result-card">
+          <h4>🌾 Recommended Crops</h4>
+          <div>
+            {% for crop in result.crops %}
+              <span class="crop-tag">🌱 {{ crop }}</span>
+            {% endfor %}
+          </div>
+          <p style="margin-top:16px; font-size:13px; color:var(--muted); line-height:1.6;">
+            These crops are best suited for the detected soil class and current fertility conditions.
+          </p>
+        </div>
+
+        <!-- Fertilizer Recommendation -->
+        <div class="result-card">
+          <h4>🧴 Fertilizer Guidance</h4>
+          <div class="fertilizer-box">
+            {{ result.fertilizer }}
+          </div>
+          <p style="margin-top:16px; font-size:13px; color:var(--muted); line-height:1.6;">
+            Apply as per manufacturer guidelines. Consider soil moisture and crop stage before application.
+          </p>
+        </div>
+
+        <!-- Pesticide Recommendation -->
+        <div class="result-card">
+          <h4>🧪 Pesticide Recommendation</h4>
+          <div class="fertilizer-box">
+            {{ result.pesticide }}
+          </div>
+          <p style="margin-top:16px; font-size:13px; color:var(--muted); line-height:1.6;">
+            Apply pesticides carefully following safety guidelines. Avoid application before rainfall.
+          </p>
+        </div>
+
+        <!-- Fusion Breakdown -->
+        <div class="result-card">
+          <h4>📊 Fertility Breakdown</h4>
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
+                <span style="color:var(--muted);">Soil Model (LSTM)</span>
+                <span style="font-weight:600;">60%</span>
+              </div>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar-fill" style="width:60%;"></div>
+              </div>
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
+                <span style="color:var(--muted);">Leaf Image (MobileNetV2)</span>
+                <span style="font-weight:600;">40%</span>
+              </div>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar-fill" style="width:40%; background: linear-gradient(90deg, #8b5e3c, #d4a96a);"></div>
+              </div>
+            </div>
+          </div>
+          <p style="margin-top:16px; font-size:13px; color:var(--muted);">
+            Weighted fusion of LSTM soil model (60%) and MobileNetV2 leaf classifier (40%).
+          </p>
+        </div>
+
+        <!-- Action Steps -->
+        <div class="result-card">
+          <h4>💡 Action Steps</h4>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            {% if result.level == "Low" %}
+              <div style="display:flex; gap:10px; font-size:14px;">
+                <span>🔴</span><span>Apply DAP and organic manure immediately</span>
+              </div>
+              <div style="display:flex; gap:10px; font-size:14px;">
+                <span>🔴</span><span>Improve soil drainage and aeration</span>
+              </div>
+              <div style="display:flex; gap:10px; font-size:14px;">
+                <span>🟡</span><span>Re-test after 4–6 weeks of treatment</span>
+              </div>
+            {% elif result.level == "Medium" %}
+              <div style="display:flex; gap:10px; font-size:14px;">
+                <span>🟡</span><span>Apply Urea to boost nitrogen levels</span>
+              </div>
+              <div style="display:flex; gap:10px; font-size:14px;">
+                <span>🟡</span><span>Add compost or green manure</span>
+              </div>
+              <div style="display:flex; gap:10px; font-size:14px;">
+                <span>🟢</span><span>Monitor crop growth and re-test in 8 weeks</span>
+              </div>
+            {% else %}
+              <div style="display:flex; gap:10px; font-size:14px;">
+                <span>🟢</span><span>Soil is healthy — maintain current practices</span>
+              </div>
+              <div style="display:flex; gap:10px; font-size:14px;">
+                <span>🟢</span><span>Use balanced NPK 10-10-10 for maintenance</span>
+              </div>
+              <div style="display:flex; gap:10px; font-size:14px;">
+                <span>🟢</span><span>Re-test annually to sustain fertility levels</span>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+
+      <a href="{{ url_for('farmer_dashboard') }}" class="back-btn">← Run New Analysis</a>
+
+    </div>
+  </main>
+</div>
+
+<script>
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('progressFill').style.width = '{{ result.sfs }}%';
+  }, 300);
+});
+</script>
+
+</body>
+</html>

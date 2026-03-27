@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Submissions - Geologist Portal</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="dashboard">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo">🌱</div>
+      <h2>Soil Fertility<br>Predictor</h2>
+      <span>Geologist Portal</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Menu</div>
+      <a href="{{ url_for('geologist_dashboard') }}" class="nav-item">
+        <span class="nav-icon">🏠</span> Dashboard
+      </a>
+      <a href="{{ url_for('geologist_submissions') }}" class="nav-item active">
+        <span class="nav-icon">📋</span> My Submissions
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="user-avatar">{{ user[0]|upper }}</div>
+        <div class="user-info">
+          <div class="uname">{{ user }}</div>
+          <div class="urole">Geologist</div>
+        </div>
+        <a href="{{ url_for('logout') }}" class="logout-btn" title="Logout">⏻</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="page-header">
+      <div>
+        <h1>My Submissions</h1>
+        <p>All soil samples collected and analysed by you</p>
+      </div>
+    </div>
+
+    <div class="content-area">
+
+      <!-- Summary Cards -->
+      <div class="stats-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px;">
+        <div class="form-card" style="padding:20px; text-align:center;">
+          <div style="font-size:32px; font-weight:700; color:var(--dark);">{{ submissions|length }}</div>
+          <div style="font-size:13px; color:var(--muted); margin-top:4px;">Total Submissions</div>
+        </div>
+        <div class="form-card" style="padding:20px; text-align:center;">
+          <div style="font-size:32px; font-weight:700; color:#3a8a3a;">{{ submissions|selectattr('fertility_level','equalto','High')|list|length }}</div>
+          <div style="font-size:13px; color:var(--muted); margin-top:4px;">High Fertility</div>
+        </div>
+        <div class="form-card" style="padding:20px; text-align:center;">
+          <div style="font-size:32px; font-weight:700; color:#c04040;">{{ submissions|selectattr('fertility_level','equalto','Low')|list|length }}</div>
+          <div style="font-size:13px; color:var(--muted); margin-top:4px;">Low Fertility</div>
+        </div>
+      </div>
+
+      <!-- Submissions Table -->
+      <div class="form-card" style="padding:0; overflow:hidden;">
+        <div style="padding:20px 24px; border-bottom:1px solid #f0ebe2; display:flex; justify-content:space-between; align-items:center;">
+          <h3 style="font-size:16px; font-weight:600;">📋 All Submissions</h3>
+          <a href="{{ url_for('geologist_dashboard') }}" class="btn btn-primary" style="padding:8px 16px; font-size:13px;">+ New Sample</a>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="predictions-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>LOCATION</th>
+                <th>FARMER</th>
+                <th>N</th>
+                <th>P</th>
+                <th>K</th>
+                <th>PH</th>
+                <th>SFS SCORE</th>
+                <th>FERTILITY</th>
+                <th>DATE</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if submissions %}
+                {% for s in submissions %}
+                <tr>
+                  <td>{{ loop.index }}</td>
+                  <td><strong>{{ s.location or '—' }}</strong></td>
+                  <td>{{ s.farmer_name or '—' }}</td>
+                  <td>{{ s.N }}</td>
+                  <td>{{ s.P }}</td>
+                  <td>{{ s.K }}</td>
+                  <td>{{ s.pH }}</td>
+                  <td><strong>{{ s.sfs_score }}%</strong></td>
+                  <td>
+                    <span class="badge {{ s.fertility_level|lower }}">{{ s.fertility_level }}</span>
+                  </td>
+                  <td>{{ s.timestamp }}</td>
+                </tr>
+                {% endfor %}
+              {% else %}
+                <tr>
+                  <td colspan="10" style="text-align:center; padding:40px; color:var(--muted);">No submissions yet.</td>
+                </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <a href="{{ url_for('geologist_dashboard') }}" class="back-btn">← New Analysis</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>
