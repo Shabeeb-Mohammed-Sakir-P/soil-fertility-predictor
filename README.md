@@ -23,11 +23,6 @@ Master of Computer Applications
 SRM Institute of Science and Technology
 Kattankulathur – 603203
 
-## 👩‍🏫 Guide
-**Dr. G. Elavarasi**
-Assistant Professor
-Department of Computer Applications
-SRM Institute of Science and Technology
 
 ## 🧠 Models
 | Model | Purpose | Accuracy |
@@ -117,8 +112,4 @@ soil-fertility-predictor/
 | 40 – 65% | 🟡 Medium | Balanced fertilization recommended |
 | 70 – 95% | 🟢 High | Minimal intervention needed |
 
-## 📜 Academic
-This project is submitted in partial fulfillment 
-of the requirements for the award of the degree 
-of Master of Computer Applications at SRM 
-Institute of Science and Technology, April 2026.
+
