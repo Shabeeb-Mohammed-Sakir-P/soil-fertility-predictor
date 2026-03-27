@@ -19,9 +19,10 @@ and pesticide recommendations.
 
 ## 👨‍💻 Author
 **Shabeeb Mohammed Sakir P**
-Master of Computer Applications
-SRM Institute of Science and Technology
-Kattankulathur – 603203
+
+[![GitHub](https://img.shields.io/badge/GitHub-Shabeeb--Mohammed--Sakir--P-black?logo=github)](https://github.com/Shabeeb-Mohammed-Sakir-P)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Shabeeb--Mohammed--Sakir-blue?logo=linkedin)](https://www.linkedin.com/in/shabeeb-mohammed-sakir)
+[![Email](https://img.shields.io/badge/Email-sshabeebmohammedsakir%40gmail.com-red?logo=gmail)](mailto:sshabeebmohammedsakir@gmail.com)
 
 
 ## 🧠 Models
